@@ -5,59 +5,186 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#111827">
 <link rel="manifest" href="./manifest.webmanifest">
+
 <title>M21 Boat Setup</title>
 
 <style>
 *{box-sizing:border-box}
+
 body{
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  margin:0;background:#f3f4f6;color:#111827
+  margin:0;
+  background:#f3f4f6;
+  color:#111827
 }
+
 header{
-  background:#111827;color:white;padding:20px 18px;
-  position:sticky;top:0;z-index:10
+  background:#111827;
+  color:white;
+  padding:20px 18px;
+  position:sticky;
+  top:0;
+  z-index:10
 }
-h1{margin:0;font-size:24px}
-main{padding:16px;max-width:760px;margin:auto}
+
+h1{
+  margin:0;
+  font-size:24px
+}
+
+main{
+  padding:16px;
+  max-width:760px;
+  margin:auto
+}
+
 .card{
-  background:white;border-radius:16px;padding:16px;margin:12px 0;
+  background:white;
+  border-radius:16px;
+  padding:16px;
+  margin:12px 0;
   box-shadow:0 2px 10px #0001
 }
+
 label{
-  display:block;font-weight:600;font-size:13px;margin:10px 0 5px
+  display:block;
+  font-weight:600;
+  font-size:13px;
+  margin:10px 0 5px
 }
+
 input,select,textarea,button{
-  width:100%;box-sizing:border-box;font:inherit;padding:12px;
-  border:1px solid #d1d5db;border-radius:10px
+  width:100%;
+  box-sizing:border-box;
+  font:inherit;
+  padding:12px;
+  border:1px solid #d1d5db;
+  border-radius:10px
 }
+
 button{
-  background:#111827;color:white;border:0;font-weight:700;
+  background:#111827;
+  color:white;
+  border:0;
+  font-weight:700;
   margin-top:10px
 }
-.secondary{background:#e5e7eb;color:#111827}
-.danger{background:#b91c1c;color:white}
-.grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:10px
+
+.secondary{
+  background:#e5e7eb;
+  color:#111827
 }
-.row{display:flex;gap:8px}
-.row button{flex:1}
-.toolbar{display:flex;gap:8px}
-.toolbar input{flex:1}
-.small{font-size:12px;color:#6b7280}
-.weather{background:#eff6ff}
+
+.danger{
+  background:#b91c1c;
+  color:white
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px
+}
+
+.row{
+  display:flex;
+  gap:8px
+}
+
+.row button{
+  flex:1
+}
+
+.toolbar{
+  display:flex;
+  gap:8px
+}
+
+.toolbar input{
+  flex:1
+}
+
+.small{
+  font-size:12px;
+  color:#6b7280
+}
+
+.weather{
+  background:#eff6ff
+}
+
 .run{
   border-top:1px solid #e5e7eb;
   padding:14px 0
 }
-.run:first-child{border-top:0}
-.runTitle{font-weight:700;font-size:17px}
-.runMeta{font-size:13px;color:#6b7280;margin-top:4px}
-.runNotes{margin-top:8px;white-space:pre-wrap}
-.actions{display:flex;gap:8px;margin-top:10px}
-.actions button{margin-top:0}
-.ok{color:#166534;font-weight:600}
+
+.run:first-child{
+  border-top:0
+}
+
+.runTitle{
+  font-weight:700;
+  font-size:17px
+}
+
+.runMeta{
+  font-size:13px;
+  color:#6b7280;
+  margin-top:4px
+}
+
+.runNotes{
+  margin-top:8px;
+  white-space:pre-wrap
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  margin-top:10px
+}
+
+.actions button{
+  margin-top:0
+}
+
+.ok{
+  color:#166534;
+  font-weight:600
+}
+
+.codeBox{
+  background:#f3f4f6;
+  border:2px dashed #9ca3af;
+  border-radius:12px;
+  padding:14px;
+  text-align:center;
+  margin-top:12px
+}
+
+.setupCode{
+  font-size:24px;
+  font-weight:800;
+  letter-spacing:2px;
+  margin:8px 0
+}
+
+.sectionTitle{
+  font-size:18px;
+  font-weight:800;
+  margin:0 0 4px
+}
+
+.nameDisplay{
+  font-size:13px;
+  color:#cbd5e1;
+  margin-top:4px
+}
+
 @media(max-width:480px){
-  .grid{grid-template-columns:1fr}
+  .grid{
+    grid-template-columns:1fr
+  }
 }
 </style>
 </head>
@@ -65,241 +192,743 @@ button{
 <body>
 
 <header>
-  <h1>🏁 M21 Boat Setup</h1>
-  <div class="small" style="color:#cbd5e1">
+
+  <h1>
+    🏁 <span id="appNameHeader">M21 Boat Setup</span>
+  </h1>
+
+  <div class="nameDisplay">
     Practice & setup logbook
   </div>
+
 </header>
+
 
 <main>
 
+
+<!-- APP NAME -->
+
 <div class="card">
-  <button id="locate">📍 Kry my ligging & weer</button>
-  <div id="status" class="small" style="margin-top:8px"></div>
+
+  <div class="sectionTitle">
+    ⚙️ App / Boat naam
+  </div>
+
+  <div class="small">
+    Verander die naam sodat elke gebruiker sy eie setup kan gebruik.
+  </div>
+
+  <label>Naam</label>
+
+  <input
+    id="appName"
+    placeholder="bv. M21 Boat Setup"
+  >
+
+  <button id="saveAppName">
+    💾 Stoor naam
+  </button>
+
+  <div
+    id="nameStatus"
+    class="small"
+    style="margin-top:8px">
+  </div>
+
 </div>
+
+
+<!-- SHARE / JOIN -->
+
+<div class="card">
+
+  <div class="sectionTitle">
+    👥 Share / Join Setup
+  </div>
+
+  <div class="small">
+    Gebruik 'n Setup Code om later jou data met 'n ander gebruiker/fone te deel.
+  </div>
+
+
+  <div class="codeBox">
+
+    <div class="small">
+      Jou Setup Code
+    </div>
+
+    <div
+      id="setupCode"
+      class="setupCode">
+      —
+    </div>
+
+    <button id="copyCode">
+      📋 Copy Setup Code
+    </button>
+
+  </div>
+
+
+  <label>Join iemand anders se Setup</label>
+
+  <input
+    id="joinCode"
+    placeholder="bv. M21-4827"
+    autocapitalize="characters"
+  >
+
+  <button id="joinSetup">
+    🔗 Join Setup
+  </button>
+
+  <div
+    id="shareStatus"
+    class="small"
+    style="margin-top:8px">
+  </div>
+
+</div>
+
+
+<!-- LOCATION -->
+
+<div class="card">
+
+  <button id="locate">
+    📍 Kry my ligging & weer
+  </button>
+
+  <div
+    id="status"
+    class="small"
+    style="margin-top:8px">
+  </div>
+
+</div>
+
+
+<!-- WEATHER -->
 
 <div class="card weather">
+
   <b>Weer vir hierdie sessie</b>
 
-  <div class="grid" style="margin-top:12px">
-    <div>Temperatuur<br><b id="temp">—</b> °C</div>
-    <div>Wind<br><b id="wind">—</b> km/h</div>
-    <div>Windrigting<br><b id="dir">—</b></div>
-    <div>Gusts<br><b id="gust">—</b> km/h</div>
+  <div
+    class="grid"
+    style="margin-top:12px">
+
+    <div>
+      Temperatuur<br>
+      <b id="temp">—</b> °C
+    </div>
+
+    <div>
+      Wind<br>
+      <b id="wind">—</b> km/h
+    </div>
+
+    <div>
+      Windrigting<br>
+      <b id="dir">—</b>
+    </div>
+
+    <div>
+      Gusts<br>
+      <b id="gust">—</b> km/h
+    </div>
+
   </div>
 
-  <div id="area" class="small" style="margin-top:10px">
+  <div
+    id="area"
+    class="small"
+    style="margin-top:10px">
     Ligging nog nie gekry nie
   </div>
+
 </div>
+
+
+<!-- NEW RUN -->
 
 <div class="card">
 
   <div class="grid">
 
     <div>
+
       <label>Datum</label>
-      <input id="date" type="date">
+
+      <input
+        id="date"
+        type="date">
+
     </div>
 
+
     <div>
+
       <label>Tyd</label>
-      <input id="time" type="time">
+
+      <input
+        id="time"
+        type="time">
+
     </div>
 
   </div>
 
+
   <label>Gebied / plek</label>
-  <input id="place" placeholder="bv. Gordon's Bay">
+
+  <input
+    id="place"
+    placeholder="bv. Gordon's Bay">
+
 
   <label>Driver</label>
-  <input id="driver" placeholder="Naam">
+
+  <input
+    id="driver"
+    placeholder="Naam">
+
 
   <div class="grid">
 
     <div>
+
       <label>Prop</label>
-      <input id="prop" placeholder="bv. 27P">
+
+      <input
+        id="prop"
+        placeholder="bv. 27P">
+
     </div>
 
+
     <div>
+
       <label>Speed (km/h)</label>
-      <input id="speed" type="number" step="0.1">
+
+      <input
+        id="speed"
+        type="number"
+        step="0.1">
+
     </div>
 
+
     <div>
+
       <label>Height / trim</label>
-      <input id="height" type="number" step="0.1">
+
+      <input
+        id="height"
+        type="number"
+        step="0.1">
+
     </div>
 
+
     <div>
+
       <label>Degrees</label>
-      <input id="degrees" type="number" step="0.1">
+
+      <input
+        id="degrees"
+        type="number"
+        step="0.1">
+
     </div>
 
   </div>
 
+
   <label>Water</label>
+
   <select id="water">
+
     <option>Kalm</option>
     <option>Klein chop</option>
     <option>Chop</option>
     <option>Groot chop</option>
+
   </select>
 
+
   <label>Notas</label>
-  <textarea id="notes" rows="4"
+
+  <textarea
+    id="notes"
+    rows="4"
     placeholder="Enjin, trim, handling, holeshot, ens."></textarea>
 
+
   <div class="row">
-    <button id="save">💾 Stoor run</button>
-    <button id="cancel" class="secondary" style="display:none">
-      Kanselleer
+
+    <button id="save">
+      💾 Stoor run
     </button>
+
+    <button
+      id="cancel"
+      class="secondary"
+      style="display:none">
+
+      Kanselleer
+
+    </button>
+
   </div>
 
-  <div id="saveStatus" class="small" style="margin-top:8px"></div>
+
+  <div
+    id="saveStatus"
+    class="small"
+    style="margin-top:8px">
+  </div>
 
 </div>
 
+
+<!-- SAVED RUNS -->
+
 <div class="card">
 
-  <h2 style="margin-top:0">Saved runs</h2>
+  <h2 style="margin-top:0">
+    Saved runs
+  </h2>
+
 
   <div class="toolbar">
-    <input id="search" placeholder="Soek prop, plek, driver...">
-    <button id="clearSearch" class="secondary" style="width:auto">
+
+    <input
+      id="search"
+      placeholder="Soek prop, plek, driver...">
+
+
+    <button
+      id="clearSearch"
+      class="secondary"
+      style="width:auto">
+
       Maak skoon
+
     </button>
+
   </div>
+
 
   <div id="runs"></div>
 
 </div>
 
+
 </main>
 
+
 <script>
+
+
+/* =========================================================
+   BASIC VARIABLES
+========================================================= */
 
 const $ = id => document.getElementById(id);
 
 let editingId = null;
+
 let weather = {};
 
-const DB_NAME = "M21BoatSetupDB";
-const STORE = "runs";
-const DB_VERSION = 1;
+
+/* =========================================================
+   APP NAME
+========================================================= */
+
+const DEFAULT_APP_NAME = "M21 Boat Setup";
+
+function getAppName(){
+
+  return localStorage.getItem("boatSetupAppName")
+    || DEFAULT_APP_NAME;
+
+}
 
 
-/* ---------------- DATABASE ---------------- */
+function loadAppName(){
+
+  const name = getAppName();
+
+  $("appName").value = name;
+
+  $("appNameHeader").textContent = name;
+
+}
+
+
+function saveAppName(){
+
+  let name =
+    $("appName").value.trim();
+
+  if(!name){
+
+    name = DEFAULT_APP_NAME;
+
+  }
+
+  localStorage.setItem(
+    "boatSetupAppName",
+    name
+  );
+
+  $("appNameHeader").textContent =
+    name;
+
+  $("appName").value =
+    name;
+
+  $("nameStatus").innerHTML =
+    '<span class="ok">✓ Naam gestoor</span>';
+
+}
+
+
+/* =========================================================
+   SETUP CODE
+========================================================= */
+
+function generateSetupCode(){
+
+  const chars =
+    "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+  let code = "M21-";
+
+  for(let i=0;i<4;i++){
+
+    code +=
+      chars.charAt(
+        Math.floor(
+          Math.random() * chars.length
+        )
+      );
+
+  }
+
+  return code;
+
+}
+
+
+function getSetupCode(){
+
+  let code =
+    localStorage.getItem("boatSetupCode");
+
+  if(!code){
+
+    code =
+      generateSetupCode();
+
+    localStorage.setItem(
+      "boatSetupCode",
+      code
+    );
+
+  }
+
+  return code;
+
+}
+
+
+function loadSetupCode(){
+
+  $("setupCode").textContent =
+    getSetupCode();
+
+}
+
+
+async function copySetupCode(){
+
+  const code =
+    getSetupCode();
+
+  try{
+
+    await navigator.clipboard.writeText(code);
+
+    $("shareStatus").innerHTML =
+      '<span class="ok">✓ Setup Code gekopieer</span>';
+
+  }catch(error){
+
+    $("shareStatus").textContent =
+      "Copy kon nie werk nie. Hou die code in en copy dit.";
+
+  }
+
+}
+
+
+function joinSetup(){
+
+  let code =
+    $("joinCode").value
+      .trim()
+      .toUpperCase();
+
+  if(!code){
+
+    $("shareStatus").textContent =
+      "Tik asseblief 'n Setup Code in.";
+
+    return;
+
+  }
+
+
+  if(code === getSetupCode()){
+
+    $("shareStatus").innerHTML =
+      '<span class="ok">✓ Hierdie foon is reeds op hierdie Setup.</span>';
+
+    return;
+
+  }
+
+
+  /*
+    Die code word voorlopig plaaslik gestoor.
+    In die volgende stap koppel ons hierdie code
+    aan die cloud database sodat twee fone
+    werklik dieselfde runs kan sync.
+  */
+
+  localStorage.setItem(
+    "joinedSetupCode",
+    code
+  );
+
+
+  $("shareStatus").innerHTML =
+    '<span class="ok">✓ Setup Code aanvaar: ' +
+    escapeHtml(code) +
+    '</span><br><span class="small">' +
+    'Cloud sync moet nog gekoppel word.' +
+    '</span>';
+
+}
+
+
+/* =========================================================
+   DATABASE
+========================================================= */
+
+const DB_NAME =
+  "M21BoatSetupDB";
+
+const STORE =
+  "runs";
+
+const DB_VERSION =
+  1;
+
 
 function openDB(){
 
-  return new Promise((resolve,reject)=>{
+  return new Promise(
+    (resolve,reject)=>{
 
-    const request = indexedDB.open(DB_NAME,DB_VERSION);
+      const request =
+        indexedDB.open(
+          DB_NAME,
+          DB_VERSION
+        );
 
-    request.onupgradeneeded = () => {
 
-      const db = request.result;
+      request.onupgradeneeded =
+        () => {
 
-      if(!db.objectStoreNames.contains(STORE)){
-        db.createObjectStore(STORE,{keyPath:"id"});
-      }
+          const db =
+            request.result;
 
-    };
 
-    request.onsuccess = () => resolve(request.result);
+          if(
+            !db.objectStoreNames
+              .contains(STORE)
+          ){
 
-    request.onerror = () => reject(request.error);
+            db.createObjectStore(
+              STORE,
+              {keyPath:"id"}
+            );
 
-  });
+          }
+
+        };
+
+
+      request.onsuccess =
+        () => resolve(
+          request.result
+        );
+
+
+      request.onerror =
+        () => reject(
+          request.error
+        );
+
+    }
+  );
 
 }
 
 
 async function dbAll(){
 
-  const db = await openDB();
+  const db =
+    await openDB();
 
-  return new Promise((resolve,reject)=>{
 
-    const request =
-      db.transaction(STORE,"readonly")
-      .objectStore(STORE)
-      .getAll();
+  return new Promise(
+    (resolve,reject)=>{
 
-    request.onsuccess = () =>
-      resolve(request.result || []);
+      const request =
+        db
+          .transaction(
+            STORE,
+            "readonly"
+          )
+          .objectStore(STORE)
+          .getAll();
 
-    request.onerror = () =>
-      reject(request.error);
 
-  });
+      request.onsuccess =
+        () =>
+          resolve(
+            request.result || []
+          );
+
+
+      request.onerror =
+        () =>
+          reject(
+            request.error
+          );
+
+    }
+  );
 
 }
 
 
 async function dbPut(data){
 
-  const db = await openDB();
+  const db =
+    await openDB();
 
-  return new Promise((resolve,reject)=>{
 
-    const request =
-      db.transaction(STORE,"readwrite")
-      .objectStore(STORE)
-      .put(data);
+  return new Promise(
+    (resolve,reject)=>{
 
-    request.onsuccess = () => resolve();
+      const request =
+        db
+          .transaction(
+            STORE,
+            "readwrite"
+          )
+          .objectStore(STORE)
+          .put(data);
 
-    request.onerror = () =>
-      reject(request.error);
 
-  });
+      request.onsuccess =
+        () => resolve();
+
+
+      request.onerror =
+        () =>
+          reject(
+            request.error
+          );
+
+    }
+  );
 
 }
 
 
 async function dbDelete(id){
 
-  const db = await openDB();
+  const db =
+    await openDB();
 
-  return new Promise((resolve,reject)=>{
 
-    const request =
-      db.transaction(STORE,"readwrite")
-      .objectStore(STORE)
-      .delete(id);
+  return new Promise(
+    (resolve,reject)=>{
 
-    request.onsuccess = () => resolve();
+      const request =
+        db
+          .transaction(
+            STORE,
+            "readwrite"
+          )
+          .objectStore(STORE)
+          .delete(id);
 
-    request.onerror = () =>
-      reject(request.error);
 
-  });
+      request.onsuccess =
+        () => resolve();
+
+
+      request.onerror =
+        () =>
+          reject(
+            request.error
+          );
+
+    }
+  );
 
 }
 
 
-/* ---------------- FORM ---------------- */
+/* =========================================================
+   FORM DATA
+========================================================= */
 
 function formData(){
 
   return {
 
     date:$("date").value,
+
     time:$("time").value,
+
     place:$("place").value,
+
     driver:$("driver").value,
+
     prop:$("prop").value,
+
     speed:$("speed").value,
+
     height:$("height").value,
+
     degrees:$("degrees").value,
+
     water:$("water").value,
+
     notes:$("notes").value,
 
-    weather:{...weather}
+    weather:{
+      ...weather
+    }
 
   };
 
@@ -308,20 +937,42 @@ function formData(){
 
 function fillForm(r){
 
-  $("date").value = r.date || "";
-  $("time").value = r.time || "";
-  $("place").value = r.place || "";
-  $("driver").value = r.driver || "";
-  $("prop").value = r.prop || "";
-  $("speed").value = r.speed || "";
-  $("height").value = r.height || "";
-  $("degrees").value = r.degrees || "";
-  $("water").value = r.water || "Kalm";
-  $("notes").value = r.notes || "";
+  $("date").value =
+    r.date || "";
+
+  $("time").value =
+    r.time || "";
+
+  $("place").value =
+    r.place || "";
+
+  $("driver").value =
+    r.driver || "";
+
+  $("prop").value =
+    r.prop || "";
+
+  $("speed").value =
+    r.speed || "";
+
+  $("height").value =
+    r.height || "";
+
+  $("degrees").value =
+    r.degrees || "";
+
+  $("water").value =
+    r.water || "Kalm";
+
+  $("notes").value =
+    r.notes || "";
+
 
   if(r.weather){
 
-    weather = r.weather;
+    weather =
+      r.weather;
+
 
     $("temp").textContent =
       r.weather.temperature ?? "—";
@@ -340,47 +991,95 @@ function fillForm(r){
 }
 
 
-/* ---------------- SAVE ---------------- */
+/* =========================================================
+   SAVE
+========================================================= */
 
 async function saveRun(){
 
-  const data = formData();
+  const data =
+    formData();
+
 
   if(!data.date){
-    alert("Sit asseblief 'n datum in.");
+
+    alert(
+      "Sit asseblief 'n datum in."
+    );
+
     return;
+
   }
 
-  if(!data.place && !data.prop && !data.driver){
-    alert("Sit ten minste 'n plek, prop of driver in.");
+
+  if(
+    !data.place &&
+    !data.prop &&
+    !data.driver
+  ){
+
+    alert(
+      "Sit ten minste 'n plek, prop of driver in."
+    );
+
     return;
+
   }
+
+
+  let oldRun = null;
+
+
+  if(editingId){
+
+    oldRun =
+      await findRun(
+        editingId
+      );
+
+  }
+
 
   const run = {
 
-    id: editingId || Date.now().toString(),
+    id:
+      editingId ||
+      Date.now().toString(),
 
     ...data,
 
+    setupCode:
+      getSetupCode(),
+
     created:
       editingId
-      ? (await findRun(editingId)).created
-      : new Date().toISOString(),
+        ? oldRun.created
+        : new Date().toISOString(),
 
-    updated:new Date().toISOString()
+    updated:
+      new Date().toISOString()
 
   };
 
+
   await dbPut(run);
 
-  editingId = null;
 
-  $("cancel").style.display = "none";
+  editingId =
+    null;
 
-  $("save").textContent = "💾 Stoor run";
+
+  $("cancel").style.display =
+    "none";
+
+
+  $("save").textContent =
+    "💾 Stoor run";
+
 
   $("saveStatus").innerHTML =
     '<span class="ok">✓ Run gestoor</span>';
+
 
   await renderRuns();
 
@@ -389,54 +1088,86 @@ async function saveRun(){
 
 async function findRun(id){
 
-  const all = await dbAll();
+  const all =
+    await dbAll();
 
-  return all.find(x => x.id === id);
+  return all.find(
+    x => x.id === id
+  );
 
 }
 
 
-/* ---------------- RENDER ---------------- */
+/* =========================================================
+   RENDER RUNS
+========================================================= */
 
 async function renderRuns(){
 
-  const all = await dbAll();
+  const all =
+    await dbAll();
+
 
   const search =
-    $("search").value.trim().toLowerCase();
+    $("search").value
+      .trim()
+      .toLowerCase();
 
-  all.sort((a,b)=>
-    (b.updated || "").localeCompare(a.updated || "")
+
+  all.sort(
+    (a,b) =>
+      (b.updated || "")
+        .localeCompare(
+          a.updated || ""
+        )
   );
 
-  const filtered = all.filter(r=>{
 
-    if(!search) return true;
+  const filtered =
+    all.filter(r=>{
 
-    return (
+      if(!search)
+        return true;
 
-      (r.place || "").toLowerCase().includes(search) ||
 
-      (r.driver || "").toLowerCase().includes(search) ||
+      return (
 
-      (r.prop || "").toLowerCase().includes(search) ||
+        (r.place || "")
+          .toLowerCase()
+          .includes(search) ||
 
-      (r.notes || "").toLowerCase().includes(search) ||
+        (r.driver || "")
+          .toLowerCase()
+          .includes(search) ||
 
-      (r.water || "").toLowerCase().includes(search)
+        (r.prop || "")
+          .toLowerCase()
+          .includes(search) ||
 
-    );
+        (r.notes || "")
+          .toLowerCase()
+          .includes(search) ||
 
-  });
+        (r.water || "")
+          .toLowerCase()
+          .includes(search)
+
+      );
+
+    });
+
 
   if(!filtered.length){
 
     $("runs").innerHTML =
-      '<div class="small" style="padding:15px 0">Geen saved runs.</div>';
+      '<div class="small" style="padding:15px 0">' +
+      'Geen saved runs.' +
+      '</div>';
 
     return;
 
   }
+
 
   $("runs").innerHTML =
     filtered.map(r=>`
@@ -444,64 +1175,108 @@ async function renderRuns(){
       <div class="run">
 
         <div class="runTitle">
-          ${escapeHtml(r.place || "Unnamed run")}
+
+          ${escapeHtml(
+            r.place ||
+            "Unnamed run"
+          )}
+
         </div>
+
 
         <div class="runMeta">
 
-          ${escapeHtml(r.date || "")}
-          ${r.time ? " • " + escapeHtml(r.time) : ""}
+          ${escapeHtml(
+            r.date || ""
+          )}
 
-          ${r.driver
-            ? " • Driver: " + escapeHtml(r.driver)
-            : ""}
+          ${
+            r.time
+              ? " • " +
+                escapeHtml(r.time)
+              : ""
+          }
+
+          ${
+            r.driver
+              ? " • Driver: " +
+                escapeHtml(r.driver)
+              : ""
+          }
 
         </div>
+
 
         <div style="margin-top:8px">
 
-          ${r.prop
-            ? "<b>Prop:</b> " + escapeHtml(r.prop) + "<br>"
-            : ""}
+          ${
+            r.prop
+              ? "<b>Prop:</b> " +
+                escapeHtml(r.prop) +
+                "<br>"
+              : ""
+          }
 
-          ${r.speed
-            ? "<b>Speed:</b> " + escapeHtml(r.speed) + " km/h<br>"
-            : ""}
+          ${
+            r.speed
+              ? "<b>Speed:</b> " +
+                escapeHtml(r.speed) +
+                " km/h<br>"
+              : ""
+          }
 
-          ${r.height
-            ? "<b>Height:</b> " + escapeHtml(r.height) + "<br>"
-            : ""}
+          ${
+            r.height
+              ? "<b>Height:</b> " +
+                escapeHtml(r.height) +
+                "<br>"
+              : ""
+          }
 
-          ${r.degrees
-            ? "<b>Degrees:</b> " + escapeHtml(r.degrees) + "<br>"
-            : ""}
+          ${
+            r.degrees
+              ? "<b>Degrees:</b> " +
+                escapeHtml(r.degrees) +
+                "<br>"
+              : ""
+          }
 
-          ${r.water
-            ? "<b>Water:</b> " + escapeHtml(r.water)
-            : ""}
+          ${
+            r.water
+              ? "<b>Water:</b> " +
+                escapeHtml(r.water)
+              : ""
+          }
 
         </div>
 
+
         ${
           r.notes
-          ? `<div class="runNotes">
-              ${escapeHtml(r.notes)}
-             </div>`
-          : ""
+            ? `<div class="runNotes">
+                ${escapeHtml(r.notes)}
+               </div>`
+            : ""
         }
+
 
         <div class="actions">
 
           <button
             class="secondary"
             onclick="editRun('${r.id}')">
+
             ✏️ Edit
+
           </button>
+
 
           <button
             class="danger"
             onclick="deleteRun('${r.id}')">
+
             🗑️ Delete
+
           </button>
 
         </div>
@@ -516,34 +1291,75 @@ async function renderRuns(){
 function escapeHtml(value){
 
   return String(value)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
 
 }
 
 
-/* ---------------- EDIT / DELETE ---------------- */
+/* =========================================================
+   EDIT / DELETE
+========================================================= */
 
 async function editRun(id){
 
-  const r = await findRun(id);
+  const r =
+    await findRun(id);
 
-  if(!r) return;
 
-  editingId = id;
+  if(!r)
+    return;
+
+
+  editingId =
+    id;
+
 
   fillForm(r);
 
-  $("save").textContent = "💾 Update run";
 
-  $("cancel").style.display = "block";
+  $("save").textContent =
+    "💾 Update run";
+
+
+  $("cancel").style.display =
+    "block";
+
 
   window.scrollTo({
-    top:document.querySelector(".card:nth-of-type(3)").offsetTop - 70,
+
+    top:
+      document
+        .querySelector(
+          ".card:nth-of-type(6)"
+        )
+        .offsetTop - 70,
+
     behavior:"smooth"
+
   });
 
 }
@@ -551,19 +1367,32 @@ async function editRun(id){
 
 async function deleteRun(id){
 
-  if(!confirm("Delete hierdie saved run?")) return;
+  if(
+    !confirm(
+      "Delete hierdie saved run?"
+    )
+  )
+    return;
+
 
   await dbDelete(id);
 
+
   if(editingId === id){
 
-    editingId = null;
+    editingId =
+      null;
 
-    $("save").textContent = "💾 Stoor run";
 
-    $("cancel").style.display = "none";
+    $("save").textContent =
+      "💾 Stoor run";
+
+
+    $("cancel").style.display =
+      "none";
 
   }
+
 
   await renderRuns();
 
@@ -572,51 +1401,90 @@ async function deleteRun(id){
 
 function clearForm(){
 
-  editingId = null;
+  editingId =
+    null;
 
-  $("date").value = new Date()
-    .toISOString()
-    .slice(0,10);
 
-  $("time").value = new Date()
-    .toTimeString()
-    .slice(0,5);
+  const now =
+    new Date();
 
-  $("place").value = "";
-  $("driver").value = "";
-  $("prop").value = "";
-  $("speed").value = "";
-  $("height").value = "";
-  $("degrees").value = "";
-  $("water").value = "Kalm";
-  $("notes").value = "";
 
-  $("save").textContent = "💾 Stoor run";
+  $("date").value =
+    now.toISOString()
+      .slice(0,10);
 
-  $("cancel").style.display = "none";
 
-  $("saveStatus").textContent = "";
+  $("time").value =
+    now.toTimeString()
+      .slice(0,5);
+
+
+  $("place").value =
+    "";
+
+  $("driver").value =
+    "";
+
+  $("prop").value =
+    "";
+
+  $("speed").value =
+    "";
+
+  $("height").value =
+    "";
+
+  $("degrees").value =
+    "";
+
+  $("water").value =
+    "Kalm";
+
+  $("notes").value =
+    "";
+
+
+  $("save").textContent =
+    "💾 Stoor run";
+
+
+  $("cancel").style.display =
+    "none";
+
+
+  $("saveStatus").textContent =
+    "";
 
 }
 
 
-/* ---------------- WEATHER ---------------- */
+/* =========================================================
+   WEATHER
+========================================================= */
 
 function direction(deg){
 
-  const dirs=[
+  const dirs = [
+
     "N","NNE","NE","ENE",
     "E","ESE","SE","SSE",
     "S","SSW","SW","WSW",
     "W","WNW","NW","NNW"
+
   ];
 
-  return dirs[Math.round(deg/22.5)%16];
+
+  return dirs[
+    Math.round(deg / 22.5) % 16
+  ];
 
 }
 
 
-async function getWeather(lat,lon){
+async function getWeather(
+  lat,
+  lon
+){
 
   const url =
     "https://api.open-meteo.com/v1/forecast" +
@@ -625,14 +1493,24 @@ async function getWeather(lat,lon){
     "&current=temperature_2m,wind_speed_10m,wind_direction_10m,wind_gusts_10m" +
     "&wind_speed_unit=kmh";
 
-  const response = await fetch(url);
+
+  const response =
+    await fetch(url);
+
 
   if(!response.ok)
-    throw new Error("Weather error");
+    throw new Error(
+      "Weather error"
+    );
 
-  const data = await response.json();
 
-  const current = data.current;
+  const data =
+    await response.json();
+
+
+  const current =
+    data.current;
+
 
   weather = {
 
@@ -646,9 +1524,12 @@ async function getWeather(lat,lon){
       current.wind_gusts_10m,
 
     direction:
-      direction(current.wind_direction_10m)
+      direction(
+        current.wind_direction_10m
+      )
 
   };
+
 
   $("temp").textContent =
     weather.temperature;
@@ -665,117 +1546,192 @@ async function getWeather(lat,lon){
 }
 
 
-/* ---------------- LOCATION ---------------- */
+/* =========================================================
+   LOCATION
+========================================================= */
 
-$("locate").onclick = () => {
+$("locate").onclick =
+  () => {
 
-  if(!navigator.geolocation){
+    if(!navigator.geolocation){
+
+      $("status").textContent =
+        "Hierdie foon/browser ondersteun nie ligging nie.";
+
+      return;
+
+    }
+
 
     $("status").textContent =
-      "Hierdie foon/browser ondersteun nie ligging nie.";
+      "Kry ligging...";
 
-    return;
 
-  }
+    navigator.geolocation.getCurrentPosition(
 
-  $("status").textContent =
-    "Kry ligging...";
+      async position=>{
 
-  navigator.geolocation.getCurrentPosition(
+        const lat =
+          position.coords.latitude;
 
-    async position=>{
+        const lon =
+          position.coords.longitude;
 
-      const lat =
-        position.coords.latitude;
 
-      const lon =
-        position.coords.longitude;
+        $("area").textContent =
+          "GPS: " +
+          lat.toFixed(5) +
+          ", " +
+          lon.toFixed(5);
 
-      $("area").textContent =
-        "GPS: " +
-        lat.toFixed(5) +
-        ", " +
-        lon.toFixed(5);
 
-      try{
+        try{
 
-        await getWeather(lat,lon);
+          await getWeather(
+            lat,
+            lon
+          );
 
-        $("status").innerHTML =
-          '<span class="ok">✓ Ligging en weer gekry</span>';
 
-      }catch(error){
+          $("status").innerHTML =
+            '<span class="ok">' +
+            '✓ Ligging en weer gekry' +
+            '</span>';
+
+
+        }catch(error){
+
+          $("status").textContent =
+            "Ligging gekry, maar weer kon nie gelaai word nie.";
+
+        }
+
+      },
+
+
+      error=>{
 
         $("status").textContent =
-          "Ligging gekry, maar weer kon nie gelaai word nie.";
+          "Ligging toestemming is nodig.";
+
+      },
+
+
+      {
+
+        enableHighAccuracy:true,
+
+        timeout:10000,
+
+        maximumAge:300000
 
       }
 
-    },
+    );
 
-    error=>{
+  };
 
-      $("status").textContent =
-        "Ligging toestemming is nodig.";
 
-    },
+/* =========================================================
+   EVENTS
+========================================================= */
 
-    {
-      enableHighAccuracy:true,
-      timeout:10000,
-      maximumAge:300000
+$("save").onclick =
+  saveRun;
+
+
+$("cancel").onclick =
+  clearForm;
+
+
+$("search").oninput =
+  renderRuns;
+
+
+$("clearSearch").onclick =
+  ()=>{
+
+    $("search").value =
+      "";
+
+    renderRuns();
+
+  };
+
+
+$("saveAppName").onclick =
+  saveAppName;
+
+
+$("appName").addEventListener(
+  "keydown",
+  event=>{
+
+    if(event.key === "Enter"){
+
+      saveAppName();
+
     }
 
-  );
-
-};
-
-
-/* ---------------- EVENTS ---------------- */
-
-$("save").onclick = saveRun;
-
-$("cancel").onclick = clearForm;
-
-$("search").oninput = renderRuns;
-
-$("clearSearch").onclick = ()=>{
-
-  $("search").value = "";
-
-  renderRuns();
-
-};
+  }
+);
 
 
-/* ---------------- START ---------------- */
+$("copyCode").onclick =
+  copySetupCode;
+
+
+$("joinSetup").onclick =
+  joinSetup;
+
+
+/* =========================================================
+   START
+========================================================= */
 
 (function(){
 
-  const now = new Date();
+  const now =
+    new Date();
+
 
   $("date").value =
-    now.toISOString().slice(0,10);
+    now.toISOString()
+      .slice(0,10);
+
 
   $("time").value =
-    now.toTimeString().slice(0,5);
+    now.toTimeString()
+      .slice(0,5);
+
+
+  loadAppName();
+
+  loadSetupCode();
 
   renderRuns();
 
 })();
 
 
-/* ---------------- SERVICE WORKER ---------------- */
+/* =========================================================
+   SERVICE WORKER
+========================================================= */
 
-if("serviceWorker" in navigator){
+if(
+  "serviceWorker" in navigator
+){
 
-  window.addEventListener("load",()=>{
+  window.addEventListener(
+    "load",
+    ()=>{
 
-    navigator.serviceWorker
-      .register("./sw.js")
-      .catch(()=>{});
+      navigator.serviceWorker
+        .register("./sw.js")
+        .catch(()=>{});
 
-  });
+    }
+  );
 
 }
 
