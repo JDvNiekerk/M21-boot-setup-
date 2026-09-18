@@ -129,22 +129,60 @@ button{
 }
 
 .recommendationMain{
-  font-size:26px;
+  font-size:28px;
   font-weight:900;
   margin:8px 0;
 }
 
 .recommendationSpeed{
-  font-size:18px;
+  font-size:19px;
   font-weight:700;
 }
 
 .match{
   background:white;
   border-radius:10px;
-  padding:10px;
+  padding:12px;
   margin-top:8px;
   border:1px solid #d1d5db;
+  line-height:1.6
+}
+
+.bestRun{
+  background:#f0fdf4;
+  border:2px solid #22c55e;
+  border-radius:12px;
+  padding:14px;
+  margin-top:12px
+}
+
+.bestRunTitle{
+  font-size:17px;
+  font-weight:800;
+  margin-bottom:8px
+}
+
+.setupGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:10px
+}
+
+.setupItem{
+  background:#f9fafb;
+  border-radius:8px;
+  padding:8px
+}
+
+.setupLabel{
+  font-size:11px;
+  color:#6b7280
+}
+
+.setupValue{
+  font-size:15px;
+  font-weight:800
 }
 
 .run{
@@ -224,9 +262,18 @@ button{
   font-size:13px;
 }
 
+.waterTemp{
+  font-size:20px;
+  font-weight:800
+}
+
 @media(max-width:480px){
   .grid{
     grid-template-columns:1fr
+  }
+
+  .setupGrid{
+    grid-template-columns:1fr 1fr
   }
 }
 </style>
@@ -235,15 +282,10 @@ button{
 <body>
 
 <header>
-
-  <h1>
-    🏁 <span id="appNameHeader">M21 Boat Setup</span>
-  </h1>
-
+  <h1>🏁 <span id="appNameHeader">M21 Boat Setup</span></h1>
   <div class="nameDisplay">
     Practice & setup logbook
   </div>
-
 </header>
 
 <main>
@@ -378,6 +420,15 @@ button{
       <b id="gust">—</b> km/h
     </div>
 
+    <div>
+      🌊 Water temperature<br>
+      <b
+        id="waterTemp"
+        class="waterTemp">
+        Nie beskikbaar
+      </b>
+    </div>
+
   </div>
 
   <div
@@ -397,8 +448,8 @@ button{
   <h2>🏆 Smart Prop Recommendation</h2>
 
   <div class="small">
-    Kies die huidige toestande. Die app vergelyk dit met julle vorige runs
-    en soek die prop wat onder soortgelyke toestande die beste gevaar het.
+    Kies die huidige toestande. Die app vergelyk dit met julle vorige
+    runs en soek die prop wat onder soortgelyke toestande die beste gevaar het.
   </div>
 
   <label>Plek</label>
@@ -602,7 +653,8 @@ button{
 
   <div class="tip">
     💡 <b>Wenk:</b> Kry eers die ligging & weer hier bo. Die huidige
-    winddata word dan outomaties saam met hierdie run gestoor.
+    winddata en beskikbare watertemperatuur word dan outomaties
+    saam met hierdie run gestoor.
   </div>
 
 
@@ -675,7 +727,13 @@ const $ = id => document.getElementById(id);
 
 let editingId = null;
 
-let weather = {};
+let weather = {
+  temperature:null,
+  wind:null,
+  gust:null,
+  direction:null,
+  waterTemperature:null
+};
 
 
 /* =========================================================
@@ -707,9 +765,7 @@ function saveAppName(){
     $("appName").value.trim();
 
   if(!name){
-
     name = DEFAULT_APP_NAME;
-
   }
 
   localStorage.setItem(
@@ -717,11 +773,9 @@ function saveAppName(){
     name
   );
 
-  $("appNameHeader").textContent =
-    name;
+  $("appNameHeader").textContent = name;
 
-  $("appName").value =
-    name;
+  $("appName").value = name;
 
   $("nameStatus").innerHTML =
     '<span class="ok">✓ Naam gestoor</span>';
@@ -875,8 +929,7 @@ function openDB(){
             request.result;
 
           if(
-            !db.objectStoreNames
-              .contains(STORE)
+            !db.objectStoreNames.contains(STORE)
           ){
 
             db.createObjectStore(
@@ -889,14 +942,10 @@ function openDB(){
         };
 
       request.onsuccess =
-        () => resolve(
-          request.result
-        );
+        () => resolve(request.result);
 
       request.onerror =
-        () => reject(
-          request.error
-        );
+        () => reject(request.error);
 
     }
   );
@@ -913,24 +962,17 @@ async function dbAll(){
 
       const request =
         db
-          .transaction(
-            STORE,
-            "readonly"
-          )
+          .transaction(STORE,"readonly")
           .objectStore(STORE)
           .getAll();
 
       request.onsuccess =
         () =>
-          resolve(
-            request.result || []
-          );
+          resolve(request.result || []);
 
       request.onerror =
         () =>
-          reject(
-            request.error
-          );
+          reject(request.error);
 
     }
   );
@@ -947,10 +989,7 @@ async function dbPut(data){
 
       const request =
         db
-          .transaction(
-            STORE,
-            "readwrite"
-          )
+          .transaction(STORE,"readwrite")
           .objectStore(STORE)
           .put(data);
 
@@ -958,10 +997,7 @@ async function dbPut(data){
         () => resolve();
 
       request.onerror =
-        () =>
-          reject(
-            request.error
-          );
+        () => reject(request.error);
 
     }
   );
@@ -978,10 +1014,7 @@ async function dbDelete(id){
 
       const request =
         db
-          .transaction(
-            STORE,
-            "readwrite"
-          )
+          .transaction(STORE,"readwrite")
           .objectStore(STORE)
           .delete(id);
 
@@ -989,10 +1022,7 @@ async function dbDelete(id){
         () => resolve();
 
       request.onerror =
-        () =>
-          reject(
-            request.error
-          );
+        () => reject(request.error);
 
     }
   );
@@ -1036,6 +1066,7 @@ function formData(){
 
 }
 
+
 function fillForm(r){
 
   $("date").value =
@@ -1068,22 +1099,43 @@ function fillForm(r){
   $("notes").value =
     r.notes || "";
 
+
   if(r.weather){
 
-    weather =
-      r.weather;
+    weather = {
+      temperature:
+        r.weather.temperature ?? null,
+
+      wind:
+        r.weather.wind ?? null,
+
+      gust:
+        r.weather.gust ?? null,
+
+      direction:
+        r.weather.direction ?? null,
+
+      waterTemperature:
+        r.weather.waterTemperature ?? null
+    };
+
 
     $("temp").textContent =
-      r.weather.temperature ?? "—";
+      weather.temperature ?? "—";
 
     $("wind").textContent =
-      r.weather.wind ?? "—";
+      weather.wind ?? "—";
 
     $("gust").textContent =
-      r.weather.gust ?? "—";
+      weather.gust ?? "—";
 
     $("dir").textContent =
-      r.weather.direction ?? "—";
+      weather.direction ?? "—";
+
+    $("waterTemp").textContent =
+      weather.waterTemperature != null
+        ? weather.waterTemperature + " °C"
+        : "Nie beskikbaar";
 
   }
 
@@ -1101,9 +1153,7 @@ async function saveRun(){
 
   if(!data.date){
 
-    alert(
-      "Sit asseblief 'n datum in."
-    );
+    alert("Sit asseblief 'n datum in.");
 
     return;
 
@@ -1123,16 +1173,16 @@ async function saveRun(){
 
   }
 
+
   let oldRun = null;
 
   if(editingId){
 
     oldRun =
-      await findRun(
-        editingId
-      );
+      await findRun(editingId);
 
   }
+
 
   const run = {
 
@@ -1155,28 +1205,22 @@ async function saveRun(){
 
   };
 
+
   await dbPut(run);
 
-  editingId =
-    null;
 
-  $("cancel").style.display =
-    "none";
+  editingId = null;
 
-  $("save").textContent =
-    "💾 Stoor run";
+  $("cancel").style.display = "none";
+
+  $("save").textContent = "💾 Stoor run";
 
   $("saveStatus").innerHTML =
     '<span class="ok">✓ Run gestoor</span>';
 
+
   await renderRuns();
 
-  /*
-    Indien die gebruiker direk daarna
-    weer 'n aanbeveling wil hê, vul ons
-    die Smart Prop gedeelte met die
-    huidige run se toestande.
-  */
 
   if(data.place){
 
@@ -1184,6 +1228,7 @@ async function saveRun(){
       data.place;
 
   }
+
 
   if(data.weather){
 
@@ -1202,6 +1247,7 @@ async function saveRun(){
     }
 
   }
+
 
   $("recommendWater").value =
     data.water || "Kalm";
@@ -1228,31 +1274,6 @@ async function findRun(id){
 /* =========================================================
    SMART PROP ENGINE
 ========================================================= */
-
-/*
-  Die aanbeveling werk met 'n score.
-
-  Plek:
-    presies dieselfde plek = sterk bonus
-
-  Water:
-    dieselfde water = sterk bonus
-
-  Windrigting:
-    dieselfde rigting = sterk bonus
-
-  Windspoed:
-    hoe nader die windspoed, hoe beter
-
-  Daarna word vorige runs volgens
-  die totale score gerangskik.
-
-  Die beste prop word bepaal uit
-  die vorige resultate.
-
-  Ons gebruik NIE net die vinnigste
-  run ooit nie.
-*/
 
 function normalizePlace(value){
 
@@ -1283,14 +1304,10 @@ function windDirectionDifference(a,b){
   ];
 
   const ia =
-    dirs.indexOf(
-      normalizeDirection(a)
-    );
+    dirs.indexOf(normalizeDirection(a));
 
   const ib =
-    dirs.indexOf(
-      normalizeDirection(b)
-    );
+    dirs.indexOf(normalizeDirection(b));
 
   if(ia === -1 || ib === -1)
     return 16;
@@ -1311,9 +1328,7 @@ function getRunWind(r){
     return null;
 
   const value =
-    parseFloat(
-      r.weather.wind
-    );
+    parseFloat(r.weather.wind);
 
   return Number.isFinite(value)
     ? value
@@ -1332,6 +1347,22 @@ function getRunDirection(r){
 
 }
 
+function getRunWaterTemperature(r){
+
+  if(!r.weather)
+    return null;
+
+  const value =
+    parseFloat(
+      r.weather.waterTemperature
+    );
+
+  return Number.isFinite(value)
+    ? value
+    : null;
+
+}
+
 function scoreRun(
   run,
   targetPlace,
@@ -1342,15 +1373,14 @@ function scoreRun(
 
   let score = 0;
 
+
+  /* PLACE */
+
   const place =
     normalizePlace(run.place);
 
   const target =
     normalizePlace(targetPlace);
-
-  /*
-    Plek
-  */
 
   if(target && place === target){
 
@@ -1367,21 +1397,10 @@ function scoreRun(
 
     score += 30;
 
-  }else{
-
-    /*
-      Ander plekke is nie heeltemal
-      uitgesluit nie, maar kry min waarde.
-    */
-
-    score += 0;
-
   }
 
 
-  /*
-    Water
-  */
+  /* WATER CONDITION */
 
   if(
     targetWater &&
@@ -1393,9 +1412,7 @@ function scoreRun(
   }
 
 
-  /*
-    Windrigting
-  */
+  /* WIND DIRECTION */
 
   const runDir =
     getRunDirection(run);
@@ -1429,9 +1446,7 @@ function scoreRun(
   }
 
 
-  /*
-    Windspoed
-  */
+  /* WIND SPEED */
 
   const runWind =
     getRunWind(run);
@@ -1509,11 +1524,6 @@ async function recommendProp(){
     await dbAll();
 
 
-  /*
-    Slegs runs met 'n prop en speed
-    kan 'n prop aanbeveling beïnvloed.
-  */
-
   const usable =
     all.filter(r=>{
 
@@ -1559,12 +1569,6 @@ async function recommendProp(){
     .filter(x=>x.score >= 35)
     .sort((a,b)=>{
 
-      /*
-        Eerstens soortgelyke toestande.
-        Daarna hoogste score.
-        Daarna vinnigste spoed.
-      */
-
       if(b.score !== a.score)
         return b.score - a.score;
 
@@ -1590,21 +1594,13 @@ async function recommendProp(){
   }
 
 
-  /*
-    Groepeer die soortgelyke runs
-    volgens prop.
-  */
-
   const propGroups = {};
 
 
   scored.forEach(item=>{
 
     const prop =
-      String(
-        item.run.prop
-      ).trim();
-
+      String(item.run.prop).trim();
 
     if(!propGroups[prop]){
 
@@ -1626,33 +1622,19 @@ async function recommendProp(){
 
 
     const speed =
-      parseFloat(
-        item.run.speed
-      ) || 0;
+      parseFloat(item.run.speed) || 0;
 
 
-    propGroups[prop].runs.push(
-      item
-    );
-
+    propGroups[prop].runs.push(item);
 
     propGroups[prop].totalScore +=
       item.score;
-
-
-    /*
-      Hoër score + hoër speed
-      tel positief.
-    */
 
     propGroups[prop].weightedScore +=
       item.score * speed;
 
 
-    if(
-      speed >
-      propGroups[prop].bestSpeed
-    ){
+    if(speed > propGroups[prop].bestSpeed){
 
       propGroups[prop].bestSpeed =
         speed;
@@ -1663,9 +1645,7 @@ async function recommendProp(){
 
 
   const groups =
-    Object.values(
-      propGroups
-    );
+    Object.values(propGroups);
 
 
   groups.forEach(g=>{
@@ -1683,13 +1663,6 @@ async function recommendProp(){
       ) /
       g.runs.length;
 
-    /*
-      Final ranking:
-      - soortgelyke toestande
-      - aantal bevestigende runs
-      - beste spoed
-      - gemiddelde spoed
-    */
 
     g.finalScore =
       (g.averageScore * 2) +
@@ -1711,21 +1684,33 @@ async function recommendProp(){
     groups[0];
 
 
+  /*
+    BELANGRIK:
+    Die "beste run" word uit daardie
+    spesifieke prop se soortgelyke runs
+    gekies.
+  */
+
   const bestRun =
     best.runs
       .slice()
-      .sort(
-        (a,b)=>
+      .sort((a,b)=>{
+
+        if(b.score !== a.score)
+          return b.score - a.score;
+
+        return (
           parseFloat(b.run.speed || 0) -
           parseFloat(a.run.speed || 0)
-      )[0];
+        );
 
+      })[0];
 
-  /*
-    Build explanation
-  */
 
   let html = "";
+
+
+  /* BEST PROP */
 
   html +=
     '<div class="recommendationMain">' +
@@ -1767,66 +1752,129 @@ async function recommendProp(){
     '</div>';
 
 
+  /* BEST MATCH */
+
   if(bestRun){
 
     const r =
       bestRun.run;
 
+    const waterTemp =
+      getRunWaterTemperature(r);
+
 
     html +=
-      '<div class="match">' +
+      '<div class="bestRun">' +
 
-      '<b>Beste ooreenstemmende run</b><br>' +
+      '<div class="bestRunTitle">' +
+      '⭐ Beste ooreenstemmende run' +
+      '</div>' +
 
-      '📍 ' +
+      '<div class="small">' +
       escapeHtml(
-        r.place || "—"
+        r.date || ""
       ) +
 
-      '<br>' +
+      (
+        r.time
+          ? " • " + escapeHtml(r.time)
+          : ""
+      ) +
 
-      '💨 ' +
+      '</div>' +
+
+      '<div class="setupGrid">' +
+
+      '<div class="setupItem">' +
+      '<div class="setupLabel">PROP</div>' +
+      '<div class="setupValue">' +
+      escapeHtml(r.prop || "—") +
+      '</div></div>' +
+
+      '<div class="setupItem">' +
+      '<div class="setupLabel">SPOED</div>' +
+      '<div class="setupValue">' +
+      escapeHtml(r.speed || "—") +
+      ' km/h</div></div>' +
+
+      '<div class="setupItem">' +
+      '<div class="setupLabel">HEIGHT / TRIM</div>' +
+      '<div class="setupValue">' +
+      escapeHtml(
+        r.height !== ""
+          ? r.height
+          : "—"
+      ) +
+      '</div></div>' +
+
+      '<div class="setupItem">' +
+      '<div class="setupLabel">DEGREES</div>' +
+      '<div class="setupValue">' +
+      escapeHtml(
+        r.degrees !== ""
+          ? r.degrees
+          : "—"
+      ) +
+      '°</div></div>' +
+
+      '<div class="setupItem">' +
+      '<div class="setupLabel">WIND</div>' +
+      '<div class="setupValue">' +
       escapeHtml(
         getRunWind(r) !== null
           ? getRunWind(r).toFixed(1)
           : "—"
       ) +
-      ' km/h ' +
+      ' km/h</div></div>' +
 
+      '<div class="setupItem">' +
+      '<div class="setupLabel">RIGTING</div>' +
+      '<div class="setupValue">' +
       escapeHtml(
-        getRunDirection(r) || ""
+        getRunDirection(r) || "—"
       ) +
+      '</div></div>' +
 
-      '<br>' +
-
-      '🌊 ' +
+      '<div class="setupItem">' +
+      '<div class="setupLabel">WATER</div>' +
+      '<div class="setupValue">' +
       escapeHtml(
         r.water || "—"
       ) +
+      '</div></div>' +
 
-      '<br>' +
-
-      '⚡ ' +
-      escapeHtml(
-        r.speed || "—"
+      '<div class="setupItem">' +
+      '<div class="setupLabel">WATER TEMP</div>' +
+      '<div class="setupValue">' +
+      (
+        waterTemp !== null
+          ? escapeHtml(waterTemp.toFixed(1)) + " °C"
+          : "Nie beskikbaar"
       ) +
-      ' km/h' +
+      '</div></div>' +
 
-      '<br>' +
+      '</div>' +
 
-      '🔩 ' +
-      escapeHtml(
-        r.prop || "—"
+      '<div style="margin-top:10px">' +
+
+      '📍 <b>Plek:</b> ' +
+      escapeHtml(r.place || "—") +
+
+      (
+        r.driver
+          ? '<br>👤 <b>Driver:</b> ' +
+            escapeHtml(r.driver)
+          : ""
       ) +
+
+      '</div>' +
 
       '</div>';
 
   }
 
 
-  /*
-    Show next alternatives
-  */
+  /* OTHER PROPS */
 
   if(groups.length > 1){
 
@@ -1834,6 +1882,7 @@ async function recommendProp(){
       '<div style="margin-top:12px;font-weight:700">' +
       'Ander props met data:' +
       '</div>';
+
 
     groups
       .slice(1,4)
@@ -1873,8 +1922,9 @@ async function recommendProp(){
 
   html +=
     '<div class="small" style="margin-top:12px">' +
-    'ℹ️ Dit is ’n aanbeveling gebaseer op julle ' +
-    'eie vorige data — nie ’n waarborg van toekomstige spoed nie.' +
+    'ℹ️ Die aanbeveling gebruik julle eie vorige ' +
+    'saved runs en vergelyk plek, water, windrigting ' +
+    'en windspoed.' +
     '</div>';
 
 
@@ -1955,7 +2005,13 @@ async function renderRuns(){
 
 
   $("runs").innerHTML =
-    filtered.map(r=>`
+    filtered.map(r=>{
+
+      const waterTemp =
+        getRunWaterTemperature(r);
+
+
+      return `
 
       <div class="run">
 
@@ -2011,7 +2067,7 @@ async function renderRuns(){
           }
 
           ${
-            r.height
+            r.height !== ""
               ? "<b>Height:</b> " +
                 escapeHtml(r.height) +
                 "<br>"
@@ -2019,10 +2075,10 @@ async function renderRuns(){
           }
 
           ${
-            r.degrees
+            r.degrees !== ""
               ? "<b>Degrees:</b> " +
                 escapeHtml(r.degrees) +
-                "<br>"
+                "°<br>"
               : ""
           }
 
@@ -2040,13 +2096,26 @@ async function renderRuns(){
           r.weather
             ? `
               <div class="small" style="margin-top:7px">
+
                 💨 Wind:
                 ${escapeHtml(
                   r.weather.wind ?? "—"
                 )} km/h
+
                 ${escapeHtml(
                   r.weather.direction ?? ""
                 )}
+
+                ${
+                  waterTemp !== null
+                    ? "<br>🌊 Water temperature: " +
+                      escapeHtml(
+                        waterTemp.toFixed(1)
+                      ) +
+                      " °C"
+                    : ""
+                }
+
               </div>
             `
             : ""
@@ -2085,7 +2154,9 @@ async function renderRuns(){
 
       </div>
 
-    `).join("");
+    `;
+
+    }).join("");
 
 }
 
@@ -2094,30 +2165,11 @@ function escapeHtml(value){
 
   return String(value)
 
-    .replaceAll(
-      "&",
-      "&amp;"
-    )
-
-    .replaceAll(
-      "<",
-      "&lt;"
-    )
-
-    .replaceAll(
-      ">",
-      "&gt;"
-    )
-
-    .replaceAll(
-      '"',
-      "&quot;"
-    )
-
-    .replaceAll(
-      "'",
-      "&#039;"
-    );
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 
 }
 
@@ -2131,32 +2183,26 @@ async function editRun(id){
   const r =
     await findRun(id);
 
-
   if(!r)
     return;
-
 
   editingId =
     id;
 
-
   fillForm(r);
-
 
   $("save").textContent =
     "💾 Update run";
 
-
   $("cancel").style.display =
     "block";
-
 
   window.scrollTo({
 
     top:
       document
-        .querySelector(".card:nth-of-type(7)")
-        .offsetTop - 70,
+        .querySelector(".card")
+        .offsetTop,
 
     behavior:"smooth"
 
@@ -2174,25 +2220,19 @@ async function deleteRun(id){
   )
     return;
 
-
   await dbDelete(id);
-
 
   if(editingId === id){
 
-    editingId =
-      null;
-
+    editingId = null;
 
     $("save").textContent =
       "💾 Stoor run";
-
 
     $("cancel").style.display =
       "none";
 
   }
-
 
   await renderRuns();
 
@@ -2201,56 +2241,40 @@ async function deleteRun(id){
 
 function clearForm(){
 
-  editingId =
-    null;
-
+  editingId = null;
 
   const now =
     new Date();
 
 
   $("date").value =
-    now.toISOString()
-      .slice(0,10);
-
+    now.toISOString().slice(0,10);
 
   $("time").value =
-    now.toTimeString()
-      .slice(0,5);
+    now.toTimeString().slice(0,5);
 
+  $("place").value = "";
 
-  $("place").value =
-    "";
+  $("driver").value = "";
 
-  $("driver").value =
-    "";
+  $("prop").value = "";
 
-  $("prop").value =
-    "";
+  $("speed").value = "";
 
-  $("speed").value =
-    "";
+  $("height").value = "";
 
-  $("height").value =
-    "";
+  $("degrees").value = "";
 
-  $("degrees").value =
-    "";
+  $("water").value = "Kalm";
 
-  $("water").value =
-    "Kalm";
-
-  $("notes").value =
-    "";
+  $("notes").value = "";
 
 
   $("save").textContent =
     "💾 Stoor run";
 
-
   $("cancel").style.display =
     "none";
-
 
   $("saveStatus").textContent =
     "";
@@ -2273,7 +2297,6 @@ function direction(deg){
 
   ];
 
-
   return dirs[
     Math.round(deg / 22.5) % 16
   ];
@@ -2281,10 +2304,67 @@ function direction(deg){
 }
 
 
-async function getWeather(
-  lat,
-  lon
-){
+/*
+  Probeer water temperature te kry.
+
+  Open-Meteo se marine API word gebruik.
+  As daar geen data vir die ligging is nie,
+  bly dit "Nie beskikbaar".
+*/
+
+async function getWaterTemperature(lat,lon){
+
+  try{
+
+    const url =
+      "https://marine-api.open-meteo.com/v1/marine" +
+      "?latitude=" + lat +
+      "&longitude=" + lon +
+      "&current=sea_surface_temperature";
+
+
+    const response =
+      await fetch(url);
+
+
+    if(!response.ok)
+      return null;
+
+
+    const data =
+      await response.json();
+
+
+    const value =
+      data &&
+      data.current &&
+      data.current.sea_surface_temperature;
+
+
+    const number =
+      parseFloat(value);
+
+
+    if(Number.isFinite(number))
+      return number;
+
+
+  }catch(error){
+
+    console.log(
+      "Water temperature unavailable",
+      error
+    );
+
+  }
+
+
+  return null;
+
+}
+
+
+async function getWeather(lat,lon){
 
   const url =
     "https://api.open-meteo.com/v1/forecast" +
@@ -2299,9 +2379,7 @@ async function getWeather(
 
 
   if(!response.ok)
-    throw new Error(
-      "Weather error"
-    );
+    throw new Error("Weather error");
 
 
   const data =
@@ -2310,6 +2388,18 @@ async function getWeather(
 
   const current =
     data.current;
+
+
+  /*
+    Kry wind data en water temperature
+    parallel om wagtyd te spaar.
+  */
+
+  const waterTemperature =
+    await getWaterTemperature(
+      lat,
+      lon
+    );
 
 
   weather = {
@@ -2326,7 +2416,10 @@ async function getWeather(
     direction:
       direction(
         current.wind_direction_10m
-      )
+      ),
+
+    waterTemperature:
+      waterTemperature
 
   };
 
@@ -2344,9 +2437,14 @@ async function getWeather(
     weather.direction;
 
 
+  $("waterTemp").textContent =
+    waterTemperature !== null
+      ? waterTemperature.toFixed(1) + " °C"
+      : "Nie beskikbaar";
+
+
   /*
-    Vul die Smart Prop gedeelte
-    outomaties met huidige winddata.
+    Vul Smart Prop outomaties.
   */
 
   $("recommendWind").value =
@@ -2376,7 +2474,7 @@ $("locate").onclick =
 
 
     $("status").textContent =
-      "Kry ligging...";
+      "Kry ligging & water temperature...";
 
 
     navigator.geolocation.getCurrentPosition(
@@ -2407,7 +2505,7 @@ $("locate").onclick =
 
           $("status").innerHTML =
             '<span class="ok">' +
-            '✓ Ligging en weer gekry' +
+            '✓ Ligging, weer & water temperature gekry' +
             '</span>';
 
 
@@ -2451,25 +2549,20 @@ $("locate").onclick =
 $("save").onclick =
   saveRun;
 
-
 $("cancel").onclick =
   clearForm;
-
 
 $("search").oninput =
   renderRuns;
 
-
 $("clearSearch").onclick =
   ()=>{
 
-    $("search").value =
-      "";
+    $("search").value = "";
 
     renderRuns();
 
   };
-
 
 $("saveAppName").onclick =
   saveAppName;
@@ -2480,9 +2573,7 @@ $("appName").addEventListener(
   event=>{
 
     if(event.key === "Enter"){
-
       saveAppName();
-
     }
 
   }
@@ -2492,29 +2583,19 @@ $("appName").addEventListener(
 $("copyCode").onclick =
   copySetupCode;
 
-
 $("joinSetup").onclick =
   joinSetup;
-
 
 $("recommend").onclick =
   recommendProp;
 
-
-/*
-  Wanneer die plek/water verander,
-  kan die gebruiker maklik weer
-  die aanbeveling laat loop.
-*/
 
 $("recommendPlace").addEventListener(
   "keydown",
   event=>{
 
     if(event.key === "Enter"){
-
       recommendProp();
-
     }
 
   }
@@ -2530,16 +2611,11 @@ $("recommendPlace").addEventListener(
   const now =
     new Date();
 
-
   $("date").value =
-    now.toISOString()
-      .slice(0,10);
-
+    now.toISOString().slice(0,10);
 
   $("time").value =
-    now.toTimeString()
-      .slice(0,5);
-
+    now.toTimeString().slice(0,5);
 
   loadAppName();
 
@@ -2554,9 +2630,7 @@ $("recommendPlace").addEventListener(
    SERVICE WORKER
 ========================================================= */
 
-if(
-  "serviceWorker" in navigator
-){
+if("serviceWorker" in navigator){
 
   window.addEventListener(
     "load",
